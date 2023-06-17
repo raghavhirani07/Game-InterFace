@@ -1,0 +1,29 @@
+[
+  {
+    "Game_Id": 5001,
+    "Game_name": "Free Fire",
+    "Description": "THis is Battle Royal Multipleuser Play in 100m Ground and last alive is Win",
+    "Game_category": "Enteritenment",
+    "Game_User": [
+      { "email": "raghav@gmail.com", "in_game_user_id": "#14785" },
+      { "email": "hemal@gmail.com", "in_game_user_id": "#14745" },
+      { "email": "jagan@gmail.com", "in_game_user_id": "#178455" }
+    ],
+    "Assest_infomation": [
+      {
+        "assest_id": 14755,
+        "assest_type": "Gun",
+        "assest_name": "Ak47",
+        "assest_image": "123.jpeg",
+        "assest_saleble_or_not": false
+      },
+      {
+        "assest_id": 14752,
+        "assest_type": "Gun",
+        "assest_name": "AMW",
+        "assest_image": "amw.jpeg",
+        "assest_saleble_or_not": true
+      }
+    ]
+  }
+]

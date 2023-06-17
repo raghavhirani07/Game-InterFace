@@ -1,0 +1,17 @@
+[
+  {
+    "_id": {
+      "$oid": "646c3c1b5abe94fc2f655884"
+    },
+    "userId": 2000,
+    "name": "Hirani Raghav",
+    "email": "raghav@gmail.com",
+    "role": 0,
+    "password": "$2b$10$bu2bvjnsdTBC6ALsMxaHr.82aCnzhDTx.KAQWojOyq8ZucjSvmixy",
+    "__v": 0,
+    "hava_game": [
+      { "game_id": 5001, "in_game_user_id": "#14785" },
+      { "game_id": 5002, "in_game_user_id": "#15474" }
+    ]
+  }
+]
