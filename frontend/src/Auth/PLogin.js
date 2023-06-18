@@ -22,7 +22,7 @@ const PersistentLogin = () => {
             }
         }
 
-        auth.accessToke?isRefreshing(false) : verifyCookie()
+        auth.accessToken?isRefreshing(false) : verifyCookie()
     } , []);
 
     return (

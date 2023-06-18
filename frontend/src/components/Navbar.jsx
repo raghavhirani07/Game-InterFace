@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import Modal from "./Modal";
 import LogOut from "../assets/food-menu-3-svgrepo-com.svg";
 import logo from "../assets/wolf.svg"
+import useAuth from "../Auth/useAuth";
 
 
 const Navbar = () => {
 
   const [ loginModal, setLoginmodal ] = useState(false);
+  const { auth } = useAuth();
   const logout = () => {
     console.log("Hello");
   }
@@ -100,6 +102,8 @@ const Navbar = () => {
             </button>
           </> */}
         <div>
+
+          {/* Sign up  */}
           <Link
             className="inline-flex items-center ml-2  bg-black border-0 text-white font-semibold text-lg mr-4 py-2 px-4 focus:outline-none  rounded    p-2 md:mt-0"
             to="/signup"
@@ -118,24 +122,63 @@ const Navbar = () => {
             </svg>
           </Link>
 
-          <button
-            className="inline-flex items-center ml-2  bg-black border-0 text-white font-semibold text-lg mr-4 py-2 px-4 focus:outline-none  rounded    p-2 md:mt-0"
-            onClick={() => setLoginmodal(true)}
-          >
-            Login
-            <svg
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              className="w-4 h-4 ml-1"
-              viewBox="0 0 24 24"
+          {auth.email ?
+                       (auth.role === 0) ?
+            <Link
+              className="inline-flex items-center ml-2  bg-black border-0 text-white font-semibold text-lg mr-4 py-2 px-4 focus:outline-none  rounded    p-2 md:mt-0"
+              to="/user"
             >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </button>
+              User
+              <svg
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                className="w-4 h-4 ml-1"
+                viewBox="0 0 24 24"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </Link> : <Link
+              className="inline-flex items-center ml-2  bg-black border-0 text-white font-semibold text-lg mr-4 py-2 px-4 focus:outline-none  rounded    p-2 md:mt-0"
+              to="/admin"
+            >
+              admin
+              <svg
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                className="w-4 h-4 ml-1"
+                viewBox="0 0 24 24"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </Link> :
+            <button
+              className="inline-flex items-center ml-2  bg-black border-0 text-white font-semibold text-lg mr-4 py-2 px-4 focus:outline-none  rounded    p-2 md:mt-0"
+              onClick={() => setLoginmodal(true)}
+            >
+              Login
+              <svg
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                className="w-4 h-4 ml-1"
+                viewBox="0 0 24 24"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </button>}
+
         </div>
+
+
+
         {loginModal ? <Modal setLoginmodal={setLoginmodal} /> : ""}
 
       </div>

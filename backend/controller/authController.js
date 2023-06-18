@@ -49,8 +49,9 @@ export const login = asyncHandler(async (req, res) => {
 })
 
 export const refresh = (req, res) => {
-    const cookies = req.cookies
-    // console.log("cookies here", cookies);
+    var cookies = req.cookies
+    // console.log(req);
+    console.log("cookies here", cookies);
     if (!cookies?.jwt) return res.status(401).json({status:false , message: 'Unauthorized : no cookie store' })
 
     const refreshToken = cookies.jwt

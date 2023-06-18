@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "../Api/Axiosapi.js";
 import useAuth from "../Auth/useAuth";
 import closeBtnpic from "../assets/close.svg";
 import Alert from "./Alert";

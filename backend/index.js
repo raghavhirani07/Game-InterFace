@@ -13,9 +13,7 @@ import { corsOptions } from './config/corsOptions.js';
 // connect with database
 import connectDb from './config/connectdb.js';
 
-// importing routes
-import userRouter from './routes/userRoute.js';
-import authrouter from './routes/authRoute.js';
+
 
 
 const app = express();
@@ -27,6 +25,9 @@ app.use(express.json())
 app.use(bodyParser.json({extended : true}))
 app.use(cors(corsOptions))
 app.use(cookieParser())
+// importing routes
+import userRouter from './routes/userRoute.js';
+import authrouter from './routes/authRoute.js';
 app.use("/users" , userRouter);
 app.use("/auth" , authrouter);
 
@@ -39,6 +40,7 @@ connectDb(DATABASE_URL)
 const port = process.env.PORT
 
 app.get("/" , (req , res) => {
+    console.log(req.cookies)
     res.send("Hello this is backend")
 })
 

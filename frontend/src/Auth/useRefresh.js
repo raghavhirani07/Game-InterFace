@@ -7,10 +7,8 @@ const useRefresh = () => {
     const refresh = async () => {
 
         // refresh backend side
-        const response = await axiosApi.get("/auth/refresh" , {
-            withCredntials:true
-        })
-        // console.log(response);
+        const response = await axiosApi.get("/auth/refresh")
+        console.log(response);
         setAuth(prev => {
                 return {...prev ,"userId":response.data.userId,"name":response.data.name,"email":response.data.email ,"mobileno":response.data.mobileno, "role":response.data.role, "accessToken":response.data.accessToken}
             });
