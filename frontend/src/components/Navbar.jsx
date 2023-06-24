@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Modal from "./Modal";
-import LogOut from "../assets/food-menu-3-svgrepo-com.svg";
 import logo from "../assets/wolf.svg"
 import useAuth from "../Auth/useAuth";
 
@@ -10,9 +9,9 @@ const Navbar = () => {
 
   const [ loginModal, setLoginmodal ] = useState(false);
   const { auth } = useAuth();
-  const logout = () => {
-    console.log("Hello");
-  }
+  // const logout = () => {
+  //   console.log("Hello");
+  // }
   return (
     <header className="text-gray-900  flex flex-row flex-nowrap  justify-center  body-font ">
       <div className="container   flex flex-wrap justify-between mt-2 max-md:flex-col max-md:justify-start max-w-[90%] rounded-lg  mb-4 min-h-[10vh] bg-gradient-to-r from-[#00C7F2] from-8.9%   to-[#C200F2] to-85.89%  flex-col md:flex-row items-center">

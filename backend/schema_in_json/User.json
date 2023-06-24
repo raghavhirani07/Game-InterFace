@@ -9,7 +9,7 @@
     "role": 0,
     "password": "$2b$10$bu2bvjnsdTBC6ALsMxaHr.82aCnzhDTx.KAQWojOyq8ZucjSvmixy",
     "__v": 0,
-    "hava_game": [
+    "have_game": [
       { "game_id": 5001, "in_game_user_id": "#14785" },
       { "game_id": 5002, "in_game_user_id": "#15474" }
     ]

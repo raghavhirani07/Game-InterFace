@@ -22,14 +22,20 @@ const app = express();
 
 // giving all permissions
 app.use(express.json())
-app.use(bodyParser.json({extended : true}))
+app.use(bodyParser.json({ extended: true }))
 app.use(cors(corsOptions))
 app.use(cookieParser())
+
+
 // importing routes
 import userRouter from './routes/userRoute.js';
 import authrouter from './routes/authRoute.js';
-app.use("/users" , userRouter);
-app.use("/auth" , authrouter);
+import gamerouter from './routes/gameRoute.js';
+app.use("/users", userRouter);
+app.use("/auth", authrouter);
+app.use("/game", gamerouter)
+
+
 
 // data base connection
 const DATABASE_URL = process.env.DATABASE_URL
@@ -39,11 +45,11 @@ connectDb(DATABASE_URL)
 
 const port = process.env.PORT
 
-app.get("/" , (req , res) => {
-    console.log(req.cookies)
-    res.send("Hello this is backend")
+app.get("/", async (req, res) => {
+    return res.send("<h1>Hello backend</h1>")
 })
 
-app.listen(port,()=>{
+app.listen(port, () => {
+
     console.log(`server listen at http://localhost:${port} `);
 })

@@ -7,7 +7,7 @@ import User from "./user/User";
 import Admin from "./admin/Admin";
 import AllGame from "./user/pages/AllGame";
 import Saleassest from "./user/pages/Saleassest";
-import UpdateProfile from "./user/pages/UpdateProfile";
+import Yourassest from "./user/pages/yourassest";
 import Buyassest from "./user/pages/Buyassest";
 import Signup from "./components/Signup";
 import Wishlist from "./user/pages/Wishlist";
@@ -36,7 +36,7 @@ function App() {
             <Route path="/user" element={<User />}>
               <Route path="" element={<AllGame />}></Route>
               <Route path="sale" element={<Saleassest />}></Route>
-              <Route path="update" element={<UpdateProfile />}></Route>
+              <Route path="yourassest" element={<Yourassest />}></Route>
               <Route path="buy" element={<Buyassest />}></Route>
               <Route path="wishlist" element={<Wishlist />}></Route>
               <Route path="new" element={<NewgameEntry />}></Route>

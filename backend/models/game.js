@@ -2,39 +2,22 @@ import mongoose from 'mongoose'
 import validator from 'validator';
 
 const gameSchema = new mongoose.Schema({
-    "gameId": {
+    "game_id": {
         type: Number,
-        default: 2000,
+        default: 5000,
     },
     "game_name": {
         type: String,
     },
-    "game_description":{
-        type : String
+    "game_description": {
+        type: String
     },
-    "user": {
-        type: Array,
+    "game_category": {
+        type: String
     },
-    "assets": [
-        {
-            "assetsId": {
-                type: Number,
-            },
-            "assetsType": {
-                type: String
-            },
-            "assetsName": {
-                type: String
-            },
-            "assetsImage": {
-                type: String
-            },
-            "assestSale": {
-                type: Boolean,
-                enum : [true , false ]
-            }
-        }
-    ],
+    "game_photo":{
+        type:String
+    },
 },
     { timestamps: true }
 )
@@ -42,9 +25,9 @@ const gameSchema = new mongoose.Schema({
 gameSchema.pre("save", async function (next) {
     var docs = this;
     const game = await Game.find()
-    docs.gameId = docs.gameId+data.length;
+    docs.game_id = docs.game_id + data.length;
     next()
-  });
+});
 
 
 const Game = mongoose.models.newGame || mongoose.model('newGame', gameSchema)

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import validator from 'validator';
 
 const userSchema = new mongoose.Schema({
@@ -29,7 +29,23 @@ const userSchema = new mongoose.Schema({
     password : {
         type : String,
         required : [true , "Please enter an password"],
-    }
+    },
+    "have_game": {
+        "type": Array,
+        "items": {
+          "type": Object,
+          "properties": {
+            "game_id": {
+              "type": Schema.Types.ObjectId,
+              "ref":"newGame"
+            },
+            "in_game_user_id": {
+              "type": String
+            }
+          },
+        }
+      }
+
 },
     { timestamps: true }
 )

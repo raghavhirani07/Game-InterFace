@@ -1,7 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from '../../Api/Axiosapi.js'
+import useAuth from '../../Auth/useAuth.js'
 
 function AllGame() {
+  const { auth } = useAuth();
+  const email = auth.email
+  const [gamedetail,setgamedetail]= useState([]);
+  useEffect(() => {
+    try {
+      const result = axios.post("/game/usergame",
+        {email:email},
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      ).then((response) => {
+          const ids =  response.data[0].game_full_detail
+          console.log(ids);
+          setgamedetail(ids)
+
+      })
+      console.log(gamedetail);
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
   return (
     <section>
       <header className="bg-slate-300 rounded-lg mb-2 space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
@@ -92,7 +117,7 @@ function AllGame() {
           </div>
 
         </li>
-        <li x-for="project in projects"  className='min-w-[16rem] min-h-[16rem] max-w-[20rem]'>
+        <li x-for="project in projects" className='min-w-[16rem] min-h-[16rem] max-w-[20rem]'>
           <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
             <Link to="#!">
               <img
