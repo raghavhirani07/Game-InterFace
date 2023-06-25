@@ -4,7 +4,8 @@ import User from '../models/userSchema.js'
 import Game from '../models/game.js'
 import Alldetail from "../models/alldetail.js"
 import Assest from "../models/assestSchema.js"
-import { ObjectId } from 'mongoose'
+import Sale from '../models/saleSchema.js'
+import { ObjectId } from 'mongodb';
 
 
 
@@ -91,9 +92,147 @@ export const getuserassest = async (req, res) => {
         ])
     await Alldetail.populate(allassest, [ { path: 'user_assest.assest_id', model: Assest }, { path: 'user_assest.user_id', model: User }, { path: 'game_id', model: Game } ])
 
-    if( allassest.length === 0 ){
-      return  res.status(201).json({"message":"User Has no Assest"})
+    if (allassest.length === 0) {
+        return res.status(201).json({ "message": "User Has no Assest" })
     }
 
     return res.send(allassest)
+}
+
+export const showstore = async (req, res) => {
+
+    const alldetail = await Sale.find({}).populate([ { path: 'assest_id', model: Assest }, { path: 'user_id', model: User }, { path: 'game_id', model: Game } ]).exec();
+    return res.send(alldetail)
+}
+
+export const saleproduct = async (req, res) => {
+    const { email, game_id, assest_id } = req.body
+
+    if (!email || !game_id || !assest_id) {
+        return res.status(501).json({ "message": "All Filed Require" })
+    }
+
+    const user = await User.find({ email: email })
+    if (!user) {
+        return res.status(502).json({ "message": "Wrong Filled" })
+    }
+    const user_id = user[ 0 ][ "_id" ];
+    // console.log(user_id);
+
+    const game = await Game.aggregate([ { '$match': { '_id': new ObjectId(game_id) } } ])
+    if (game.length == 0) {
+        return res.status(502).json({ "message": "Wrong game Filled" })
+
+    }
+
+    const assest = await Assest.aggregate([ { '$match': { '_id': new ObjectId(assest_id) } } ])
+
+    if (assest.length == 0) {
+        return res.status(502).json({ "message": "Wrong assest Filled" })
+    }
+
+    const alldetail = await Alldetail.aggregate([ { '$match': { 'game_id': new ObjectId(game_id), 'user_assest.user_id': user_id, 'user_assest.assest_id': new ObjectId(assest_id) } }, ])
+
+    if (alldetail.length == 0) {
+        return res.status(502).json({ "message": "Not has Assest For Sale Filled" })
+    }
+
+    const has_in_sale = await Sale.find({
+        game_id: new ObjectId(game_id),
+        user_id: user_id,
+        assest_id: new ObjectId(assest_id),
+    })
+
+    // console.log(has_in_sale);
+    if (has_in_sale.length !== 0) {
+        return res.status(506).json({ "message": "this product you all ready add to store " })
+    }
+
+    const result = await Sale.create({
+        game_id: new ObjectId(game_id),
+        user_id: user_id,
+        assest_id: new ObjectId(assest_id),
+        price: 4000
+    })
+
+    // console.log(alldetail);
+    if (!result) {
+        return res.status(502).json({ "message": "Some database resonse Data not store" })
+    }
+
+    // console.log(result);
+    return res.status(200).json({ "message": "Your assest open to buy " })
+}
+export const buyproduct = async (req, res) => {
+    const { email, sale_id } = req.body;
+
+    //* Empty Filed
+    if (!email || !sale_id) {
+        return res.status(501).json({ "message": "All Filed Required" })
+    }
+
+    //* Buyer All Details Collected
+    const buyer_user = await User.find({ email: email }).exec()
+
+    const buyer_user_id = buyer_user[ 0 ][ "_id" ]
+    console.log(buyer_user_id);
+    if (buyer_user.length == 0) {
+        return res.status(501).json({ "message": "User Not have" })
+    }
+
+    //* Product sale All Detail gate
+    const sale_has_id = await Sale.find({ _id: new ObjectId(sale_id) })
+    if (sale_has_id.length == 0) {
+        return res.status(501).json({ "message": "Assest has not sale in store" })
+    }
+    // console.log(sale_has_id);
+    const game_id = sale_has_id[ 0 ][ "game_id" ];
+    const assest_id = sale_has_id[ 0 ][ "assest_id" ]
+    console.log(assest_id);
+
+
+    //* Find the Buyer has that game or not
+    const has_game = await User.aggregate([ { '$match': { 'have_game.game_id': game_id, '_id': buyer_user_id } } ])
+
+    // console.log("hello");
+
+    if (has_game.length == 0) {
+        return res.status(501).json({ "message": "Buyer  has not this game" })
+    }
+
+    const user_has_register = await Alldetail.aggregate([ { '$match': { 'user_assest.user_id': buyer_user_id } } ])
+
+    // console.log(user_has_register);
+
+    const alldetail = await Alldetail.find({ game_id: game_id })
+    if (alldetail.length == 0) {
+        return res.status(501).json({ "message": "Game detail not set yet " })
+    }
+    let result = false;
+    // console.log(alldetail);
+    if (user_has_register.length == 0) {
+        //* User not Register
+        const new_Object = {
+            "user_id": buyer_user_id,
+            "assest_id": [ assest_id ]
+        }
+        const result =await Alldetail.find({ game_id: game_id }).updateMany({
+            $push: {
+                "user_assest": new_Object
+            }
+        }).exec()
+        console.log(result.acknowledged);
+    }
+    else {
+
+        const result =await Alldetail.updateOne({ game_id: game_id, "user_assest.user_id": buyer_user_id }, { $push: { "user_assest.$.assest_id": assest_id } }).exec()
+        console.log(result.acknowledged);
+    }
+    if(result.acknowledged){
+        //* delete the Entry From the User That has assest
+        //* Also Delete Sale Part From The Database
+
+    }
+
+    return res.send("Purchase buy successfully ")
 }

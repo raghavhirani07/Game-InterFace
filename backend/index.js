@@ -31,6 +31,7 @@ app.use(cookieParser())
 import userRouter from './routes/userRoute.js';
 import authrouter from './routes/authRoute.js';
 import gamerouter from './routes/gameRoute.js';
+import Sale from './models/saleSchema.js';
 app.use("/users", userRouter);
 app.use("/auth", authrouter);
 app.use("/game", gamerouter)
@@ -50,6 +51,5 @@ app.get("/", async (req, res) => {
 })
 
 app.listen(port, () => {
-
     console.log(`server listen at http://localhost:${port} `);
 })

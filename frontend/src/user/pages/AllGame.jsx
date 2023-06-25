@@ -16,7 +16,7 @@ function AllGame() {
           withCredentials: true,
         }
       ).then((response) => {
-          const ids =  response.data[0].game_full_detail
+          const ids =  response.data[0].have_game
           console.log(ids);
           setgamedetail(ids)
 

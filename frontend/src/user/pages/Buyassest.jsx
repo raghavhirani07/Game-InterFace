@@ -1,6 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import useAuth from '../../Auth/useAuth';
+import axios from '../../Api/Axiosapi.js';
 
 function Buyassest() {
+  const [saleproduct,setsaleproduct] = useState();
+  const {auth} = useAuth()
+  const email = auth.email
+    useEffect(() => {
+    try {
+      const result = axios.post("/game/showstore",
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      ).then((response) => {
+        const ids = response.data
+        console.log(ids);
+        setsaleproduct(ids)
+      })
+      console.log(saleproduct)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
+
+
+
   return (
     <div className=" flex flex-col ">
 
