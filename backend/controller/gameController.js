@@ -188,6 +188,7 @@ export const buyproduct = async (req, res) => {
     // console.log(sale_has_id);
     const game_id = sale_has_id[ 0 ][ "game_id" ];
     const assest_id = sale_has_id[ 0 ][ "assest_id" ]
+    const saler_id = sale_has_id[ 0 ][ 'user_id' ]
     console.log(assest_id);
 
 
@@ -208,7 +209,8 @@ export const buyproduct = async (req, res) => {
     if (alldetail.length == 0) {
         return res.status(501).json({ "message": "Game detail not set yet " })
     }
-    let result = false;
+    const alldetail_id = alldetail[ 0 ][ "_id" ]
+    var result = false;
     // console.log(alldetail);
     if (user_has_register.length == 0) {
         //* User not Register
@@ -216,21 +218,25 @@ export const buyproduct = async (req, res) => {
             "user_id": buyer_user_id,
             "assest_id": [ assest_id ]
         }
-        const result =await Alldetail.find({ game_id: game_id }).updateMany({
+        result = await Alldetail.find({ game_id: game_id }).updateMany({
             $push: {
                 "user_assest": new_Object
             }
         }).exec()
-        console.log(result.acknowledged);
+        // console.log(result.acknowledged);
     }
     else {
 
-        const result =await Alldetail.updateOne({ game_id: game_id, "user_assest.user_id": buyer_user_id }, { $push: { "user_assest.$.assest_id": assest_id } }).exec()
-        console.log(result.acknowledged);
+        result = await Alldetail.updateOne({ game_id: game_id, "user_assest.user_id": buyer_user_id }, { $push: { "user_assest.$.assest_id": assest_id } })
+        // console.log(result.acknowledged);
     }
-    if(result.acknowledged){
+    // console.log(result.acknowledged);
+    if (result.acknowledged) {
         //* delete the Entry From the User That has assest
         //* Also Delete Sale Part From The Database
+        const delete_item_from_seller = await Alldetail.updateOne({ game_id: game_id, "user_assest.user_id": saler_id }, { $pull: { "user_assest.$.assest_id": assest_id } }).exec()
+
+        const delete_sale_detail = await Sale.deleteOne({ '_id': new ObjectId(sale_id) }).exec()
 
     }
 
