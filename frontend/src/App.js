@@ -6,7 +6,6 @@ import Aboutus from "./components/Aboutus";
 import User from "./user/User";
 import Admin from "./admin/Admin";
 import AllGame from "./user/pages/AllGame";
-import Saleassest from "./user/pages/Saleassest";
 import Yourassest from "./user/pages/yourassest";
 import Buyassest from "./user/pages/Buyassest";
 import Signup from "./components/Signup";
@@ -35,7 +34,6 @@ function App() {
           <Route element={<RequireAuth accessRole={0} />} >
             <Route path="/user" element={<User />}>
               <Route path="" element={<AllGame />}></Route>
-              <Route path="sale" element={<Saleassest />}></Route>
               <Route path="yourassest" element={<Yourassest />}></Route>
               <Route path="buy" element={<Buyassest />}></Route>
               <Route path="wishlist" element={<Wishlist />}></Route>

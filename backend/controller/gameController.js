@@ -29,11 +29,11 @@ export const connectWithGame = asyncHandler(async (req, res) => {
 export const getusergame = async (req, res) => {
     const { email } = req.body;
     // console.log(email);
-    if (!email) { return res.status(401).json({ "message": "All filed need" }); }
+    if (!email) { return res.status(409).json({ "message": "All filed need" }); }
     const userhas = await User.findOne({ email: email });
 
     if (!userhas) {
-        return res.status(401).json({ "message": "user not found " })
+        return res.status(409).json({ "message": "user not found " })
     }
     const usergame = await User.find({ email: email }, '-game_id').populate({ path: 'have_game.game_id', model: Game });
 
@@ -57,22 +57,22 @@ export const getusergame = async (req, res) => {
 export const fetchgamedetail = async (req, res) => {
     const { game_id } = req.body;
     console.log(game_id);
-    if (!game_id) return res.status(401).json({ "message": "All filed need" });
+    if (!game_id) return res.status(409).json({ "message": "All filed need" });
     const gamedetail = await Game.findOne({ game_id: game_id });
 
     if (!gamedetail) {
-        return res.status(401).json({ "message": "user not found " })
+        return res.status(409).json({ "message": "user not found " })
     }
     return res.send(gamedetail)
 }
 export const getuserassest = async (req, res) => {
     const { email } = req.body
 
-    if (!email) return res.status(401).json({ "message": "Enter All Filed" })
+    if (!email) return res.status(409).json({ "message": "Enter All Filed" })
 
     const user = await User.findOne({ email: email }).exec();
 
-    if (!user) return res.status(501).json({ "message": "User Not Found " })
+    if (!user) return res.status(409).json({ "message": "User Not Found " })
     const user_id = user._id;
     console.log(user_id);
 
@@ -93,7 +93,7 @@ export const getuserassest = async (req, res) => {
     await Alldetail.populate(allassest, [ { path: 'user_assest.assest_id', model: Assest }, { path: 'user_assest.user_id', model: User }, { path: 'game_id', model: Game } ])
 
     if (allassest.length === 0) {
-        return res.status(201).json({ "message": "User Has no Assest" })
+        return res.status(409).json({ "message": "User Has no Assest" })
     }
 
     return res.send(allassest)
@@ -109,7 +109,7 @@ export const saleproduct = async (req, res) => {
     const { email, game_id, assest_id } = req.body
 
     if (!email || !game_id || !assest_id) {
-        return res.status(501).json({ "message": "All Filed Require" })
+        return res.status(409).json({ "message": "All Filed Require" })
     }
 
     const user = await User.find({ email: email })
@@ -156,6 +156,7 @@ export const saleproduct = async (req, res) => {
     })
 
     // console.log(alldetail);
+    console.log(result);
     if (!result) {
         return res.status(502).json({ "message": "Some database resonse Data not store" })
     }
@@ -168,7 +169,7 @@ export const buyproduct = async (req, res) => {
 
     //* Empty Filed
     if (!email || !sale_id) {
-        return res.status(501).json({ "message": "All Filed Required" })
+        return res.status(409).json({ "message": "All Filed Required" })
     }
 
     //* Buyer All Details Collected
@@ -177,13 +178,13 @@ export const buyproduct = async (req, res) => {
     const buyer_user_id = buyer_user[ 0 ][ "_id" ]
     console.log(buyer_user_id);
     if (buyer_user.length == 0) {
-        return res.status(501).json({ "message": "User Not have" })
+        return res.status(409).json({ "message": "User Not have" })
     }
 
     //* Product sale All Detail gate
     const sale_has_id = await Sale.find({ _id: new ObjectId(sale_id) })
     if (sale_has_id.length == 0) {
-        return res.status(501).json({ "message": "Assest has not sale in store" })
+        return res.status(409).json({ "message": "Assest has not sale in store" })
     }
     // console.log(sale_has_id);
     const game_id = sale_has_id[ 0 ][ "game_id" ];
@@ -198,7 +199,7 @@ export const buyproduct = async (req, res) => {
     // console.log("hello");
 
     if (has_game.length == 0) {
-        return res.status(501).json({ "message": "Buyer  has not this game" })
+        return res.status(409).json({ "message": "Buyer  has not this game" })
     }
 
     const user_has_register = await Alldetail.aggregate([ { '$match': { 'user_assest.user_id': buyer_user_id } } ])
@@ -207,7 +208,7 @@ export const buyproduct = async (req, res) => {
 
     const alldetail = await Alldetail.find({ game_id: game_id })
     if (alldetail.length == 0) {
-        return res.status(501).json({ "message": "Game detail not set yet " })
+        return res.status(409).json({ "message": "Game detail not set yet " })
     }
     const alldetail_id = alldetail[ 0 ][ "_id" ]
     var result = false;

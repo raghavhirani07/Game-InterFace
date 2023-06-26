@@ -6,29 +6,79 @@ import useAuth from '../../Auth/useAuth.js'
 function AllGame() {
   const { auth } = useAuth();
   const email = auth.email
-  const [gamedetail,setgamedetail]= useState([]);
+  const [ gamedetail, setgamedetail ] = useState([]);
+  const [ error, seterror ] = useState(false);
+  const [ errormessage, seterrormessage ] = useState("")
   useEffect(() => {
     try {
       const result = axios.post("/game/usergame",
-        {email:email},
+        { email: email },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       ).then((response) => {
-          const ids =  response.data[0].have_game
-          console.log(ids);
-          setgamedetail(ids)
+        const ids = response.data[ 0 ].have_game
+        console.log(ids);
+        setgamedetail(ids)
 
       })
-      console.log(gamedetail);
-    } catch (error) {
-      console.log(error)
+      // console.log(gamedetail);
+
+    }
+    catch (err) {
+      error(true)
+      if (!err?.response) {
+        seterrormessage("Server Not response")
+      } else if (err.response?.status === 409) {
+        seterrormessage(err.response?.data.errormessage)
+      }
     }
   }, [])
 
+  const component = gamedetail.map((res, i) => {
+    return (
+      <li x-for="project in projects " className='min-w-[16rem] min-h-[16rem] max-w-[20rem] ' key={i} >
+        <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+          <center> <img
+            className="rounded-t-lg max-w-max pt-2 "
+            src="https://dummyimage.com/300X200"
+            alt=""
+          />
+          </center>
+          <div className="p-6">
+            <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+              {res.game_id.game_name}
+            </h5>
+            <div className='mt-4'>
+              <span className=" text-base text-black mr-3 ">
+                Game Category :
+              </span>
+              <span className='text-sm text-neutral-500 '>
+                {res.game_id.game_category}
+              </span>
+            </div>
+            <div className='mt-4'>
+              <span className=" text-base text-black mr-3 ">
+                Game Description :
+              </span>
+              <span className='text-sm text-neutral-500 '>
+                {res.game_id.game_description}
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </li>
+    )
+  })
+
+
+
+
   return (
     <section>
+      {error ? <h1 className='bg-red-300 text-xl '>{errormessage}  </h1> : ""}
       <header className="bg-slate-300 rounded-lg mb-2 space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
 
         <div className="flex items-center justify-between">
@@ -77,106 +127,7 @@ function AllGame() {
 
       <ul className="bg-slate-100 p-4 sm:px-8 sm:pt-6 sm:pb-8 lg:p-4 xl:px-8 xl:pt-6 xl:pb-8 flex flex-row  flex-wrap  justify-self-start  gap-4 text-sm leading-6">
 
-        <li x-for="project in projects " className='min-w-[16rem] min-h-[16rem] max-w-[20rem] '  >
-          <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-            <Link to="#!">
-              <img
-                className="rounded-t-lg max-w-max "
-                src="https://dummyimage.com/300X200"
-                alt=""
-              />
-            </Link>
-            <div className="p-6">
-              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                Game Name
-              </h5>
-              <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-                Game description like type etc ..
-              </p>
-            </div>
-          </div>
-
-        </li>
-        <li x-for="project in projects " className='min-w-[16rem] min-h-[16rem] max-w-[20rem]'>
-          <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-            <Link to="#!">
-              <img
-                className="rounded-t-lg max-w-[100%]"
-                src="https://dummyimage.com/300X200"
-                alt=""
-              />
-            </Link>
-            <div className="p-6">
-              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                Game Name
-              </h5>
-              <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-                Game description like type etc ..
-              </p>
-            </div>
-          </div>
-
-        </li>
-        <li x-for="project in projects" className='min-w-[16rem] min-h-[16rem] max-w-[20rem]'>
-          <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-            <Link to="#!">
-              <img
-                className="rounded-t-lg max-w-[100%]"
-                src="https://dummyimage.com/300X200"
-                alt=""
-              />
-            </Link>
-            <div className="p-6">
-              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                Game Name
-              </h5>
-              <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-                Game description like type etc ..
-              </p>
-            </div>
-          </div>
-
-        </li>
-        <li x-for="project in projects " className='min-w-[16rem] min-h-[16rem] max-w-[20rem]'>
-          <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-            <Link to="#!">
-              <img
-                className="rounded-t-lg max-w-[100%]"
-                src="https://dummyimage.com/300X200"
-                alt=""
-              />
-            </Link>
-            <div className="p-6">
-              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                Game Name
-              </h5>
-              <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-                Game description like type etc ..
-              </p>
-            </div>
-          </div>
-
-        </li>
-
-        {/* For new Project add  */}
-
-        <li className="flex min-w-[16rem] min-h-[16rem ] bg-white">
-          <Link
-            to="new"
-            className="hover:border-blue-500 hover:border-solid hover:bg-white hover:text-blue-500 group w-full flex flex-col items-center justify-center rounded-md  border-dashed border-slate-300 border-4 text-sm leading-6 text-slate-900 font-medium py-3"
-          >
-            <svg
-              className="group-hover:text-blue-500 mb-1 text-slate-400"
-              width={20}
-              height={20}
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />
-            </svg>
-            New project
-          </Link>
-        </li>
+        {component}
 
 
 

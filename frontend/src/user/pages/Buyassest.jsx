@@ -3,10 +3,12 @@ import useAuth from '../../Auth/useAuth';
 import axios from '../../Api/Axiosapi.js';
 
 function Buyassest() {
-  const [saleproduct,setsaleproduct] = useState();
-  const {auth} = useAuth()
+  const [ saleproduct, setsaleproduct ] = useState([]);
+  const { auth } = useAuth()
   const email = auth.email
-    useEffect(() => {
+  const [ error, seterror ] = useState(false);
+  const [ errormessage, seterrormessage ] = useState("")
+  useEffect(() => {
     try {
       const result = axios.post("/game/showstore",
         {
@@ -19,18 +21,110 @@ function Buyassest() {
         setsaleproduct(ids)
       })
       console.log(saleproduct)
-    } catch (error) {
-      console.log(error)
+      seterror(false)
+
+    } catch (err) {
+      seterror(true)
+      if (!err?.response) {
+        seterrormessage("Server Not response")
+      } else if (err.response?.status === 409) {
+        seterrormessage(err.response?.data.errormessage)
+      }
     }
   }, [])
+
+  const component = saleproduct.map((res, i) => {
+    // console.log(res._id);
+    return (
+      <li x-for="project in projects " className='min-w-[16rem] min-h-[16rem] max-w-[20rem] ' key={i} >
+        <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+          <center> <img
+            className="rounded-t-lg max-w-max pt-2 mx-2 "
+            src="https://dummyimage.com/300X200"
+            alt=""
+          />
+          </center>
+          <div className="p-6">
+            <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+              {res.game_id.game_name}
+            </h5>
+            <div className='mt-4'>
+              <span className=" text-base text-black mr-3 ">
+                Game Category :
+              </span>
+              <span className='text-sm text-neutral-500 '>
+                {res.game_id.game_category}
+              </span>
+            </div>
+            <div className='mt-4'>
+              <span className=" text-base text-black mr-3 ">
+                Assest Name :
+              </span>
+              <span className='text-sm text-neutral-500 '>
+                {res.assest_id.assest_name}
+              </span>
+            </div>
+            <div className='mt-4'>
+              <span className=" text-base text-black mr-3 ">
+                Assest Type :
+              </span>
+              <span className='text-sm text-neutral-500 '>
+                {res.assest_id.assest_type}
+              </span>
+            </div>
+            <div className='mt-4'>
+              <span className=" text-base text-black mr-3 ">
+                Saler :
+              </span>
+              <span className='text-sm text-neutral-500 '>
+                {res.user_id.name}
+              </span>
+            </div>
+            <center>
+              <button
+
+                className="hover:bg-blue-400 group mt-4 flex items-center rounded-md bg-blue-500 text-white  font-medium px-6 py-2 text-lg shadow-sm"
+                onClick={() => buyproduct(email, res._id)}
+              >
+                Buy
+              </button>
+            </center>
+          </div>
+        </div>
+
+      </li>
+    )
+  })
+
+  const buyproduct = (email, sale_id) => {
+    try {
+      axios.post("/game/buyproduct",
+        { email, sale_id },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      ).then((res) => {
+        console.log(res);
+        seterror(false)
+      })
+    } catch (err) {
+      seterror(true)
+      if (!err?.response) {
+        seterrormessage("Server Not response")
+      } else if (err.response?.status === 409) {
+        seterrormessage(err.response?.data.errormessage)
+      }
+    }
+  }
 
 
 
   return (
+
     <div className=" flex flex-col ">
 
       {/* Header */}
-
       <header className="bg-red-200 rounded-lg mb-2 space-y-4 p-4 sm:px-8 sm:py-6 lg:p-4 xl:px-8 xl:py-6">
 
         <div className="flex items-center justify-center">
@@ -61,36 +155,16 @@ function Buyassest() {
         </form>
       </header>
 
+      {error ? <h1 className='bg-red-300 text-xl '>{errormessage}  </h1> : ""}
+
       {/* Bottom part */}
-      <div className=" max-w-2xl px-4 py-6 sm:px-6 bg-slate-200 sm:py-7 border-2 border-r-2 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-          Customers also purchased
-        </h2>
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          <div className="group relative">
-            <div className="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-              <img
-                src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg"
-                alt="Front of men's Basic Tee in black."
-                className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-              />
-            </div>
-            <div className="mt-4 flex justify-between">
-              <div>
-                <h3 className="text-sm text-gray-700">
-                  <a href="#">
-                    <span aria-hidden="true" className="absolute inset-0" />
-                    Basic Tee
-                  </a>
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">Black</p>
-              </div>
-              <p className="text-sm font-medium text-gray-900">$35</p>
-            </div>
-          </div>
-          {/* More products... */}
-        </div>
-      </div>
+      <ul className="bg-slate-100 p-4 sm:px-8 sm:pt-6 sm:pb-8 lg:p-4 xl:px-8 xl:pt-6 xl:pb-8 flex flex-row  flex-wrap  justify-self-start  gap-4 text-sm leading-6">
+
+        {component}
+
+
+
+      </ul>
 
     </div>
   )
