@@ -15,7 +15,6 @@ function Yourassest() {
         { email: email },
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true,
         }
       ).then((response) => {
         const ids = response.data
@@ -23,9 +22,9 @@ function Yourassest() {
         setuserassest(ids)
       })
     } catch (error) {
-      console.log(error)
+      console.log(error?.response);
     }
-  }, [])
+  }, [email])
 
   const saleproduct = (email, game_id, assest_id) => {
     try {
@@ -33,31 +32,13 @@ function Yourassest() {
         { email, game_id, assest_id },
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true,
         }
       ).then((res) => {
         console.log(res);
       })
       setsucess(true)
     } catch (error) {
-
-      if (error?.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
-      }
-      console.log(error.config);
-
+      console.log(error?.response);
       setsucess(false)
     }
   }

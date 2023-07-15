@@ -16,4 +16,4 @@ gameRouter.post("/saleproduct",saleproduct)
 gameRouter.post("/buyproduct",buyproduct)
 // gameRouter.post("/getgamedetail" , fetchgamedetail)
 
-export default gameRouter;
+export default gameRouter;getuserassest
