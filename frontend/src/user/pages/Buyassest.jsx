@@ -8,6 +8,7 @@ function Buyassest() {
   const email = auth.email
   const [ error, seterror ] = useState(false);
   const [ errormessage, seterrormessage ] = useState("")
+  const [success , setsuccess] = useState(false)
   useEffect(() => {
     try {
       const result = axios.post("/game/showstore",
@@ -31,7 +32,7 @@ function Buyassest() {
         seterrormessage(err.response?.data.errormessage)
       }
     }
-  }, [])
+  }, [success])
 
   const component = saleproduct.map((res, i) => {
     // console.log(res._id);
@@ -107,9 +108,11 @@ function Buyassest() {
       ).then((res) => {
         console.log(res);
         seterror(false)
+        setsuccess(true)
       })
     } catch (err) {
       seterror(true)
+      setsuccess(false)
       if (!err?.response) {
         seterrormessage("Server Not response")
       } else if (err.response?.status === 409) {
@@ -156,7 +159,7 @@ function Buyassest() {
       </header>
 
       {error ? <h1 className='bg-red-300 text-xl '>{errormessage}  </h1> : ""}
-
+      {success ? <h1 className='bg-green-300 text-xl p-3'> Your Product Sale </h1> : ""}
       {/* Bottom part */}
       <ul className="bg-slate-100 p-4 sm:px-8 sm:pt-6 sm:pb-8 lg:p-4 xl:px-8 xl:pt-6 xl:pb-8 flex flex-row  flex-wrap  justify-self-start  gap-4 text-sm leading-6">
 

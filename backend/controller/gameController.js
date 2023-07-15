@@ -228,7 +228,7 @@ export const buyproduct = async (req, res) => {
     }
     else {
 
-        result = await Alldetail.updateOne({ game_id: game_id, "user_assest.user_id": buyer_user_id }, { $push: { "user_assest.$.assest_id": assest_id } })
+        result = await Alldetail.updateOne({ game_id: game_id, "user_assest.user_id": buyer_user_id }, { $push: { "user_assest.$.assest_id": assest_id } }).exec()
         // console.log(result.acknowledged);
     }
     // console.log(result.acknowledged);
