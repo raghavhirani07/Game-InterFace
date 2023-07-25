@@ -8,33 +8,31 @@ function Buyassest() {
   const email = auth.email
   const [ error, seterror ] = useState(false);
   const [ errormessage, seterrormessage ] = useState("")
-  const [success , setsuccess] = useState(false)
+  const [ success, setsuccess ] = useState(false)
   useEffect(() => {
-    try {
-      const result = axios.post("/game/showstore",
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      ).then((response) => {
-        const ids = response.data
-        console.log(ids);
-        setsaleproduct(ids)
-      })
-      console.log(saleproduct)
-      seterror(false)
 
-    } catch (err) {
+    const result = axios.post("/game/showstore",
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    ).then((response) => {
+      const ids = response.data
+      console.log(ids);
+      setsaleproduct(ids)
+    }).catch((err) => {
       seterror(true)
       if (!err?.response) {
         seterrormessage("Server Not response")
       } else if (err.response?.status === 409) {
         seterrormessage(err.response?.data.errormessage)
       }
-    }
-  }, [success])
 
-  const component = saleproduct.map((res, i) => {
+    })
+
+  }, [ success ])
+
+  const component = saleproduct?.map((res, i) => {
     // console.log(res._id);
     return (
       <li x-for="project in projects " className='min-w-[16rem] min-h-[16rem] max-w-[20rem] ' key={i} >
@@ -98,27 +96,27 @@ function Buyassest() {
   })
 
   const buyproduct = (email, sale_id) => {
-    try {
-      axios.post("/game/buyproduct",
-        { email, sale_id },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      ).then((res) => {
-        console.log(res);
-        seterror(false)
-        setsuccess(true)
-      })
-    } catch (err) {
+    axios.post("/game/buyproduct",
+      { email, sale_id },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    ).then((res) => {
+      // console.log(res);
+      seterror(false)
+      setsuccess(true)
+    }).catch((err) => {
+      console.log(err.response?.data);
       seterror(true)
       setsuccess(false)
       if (!err?.response) {
         seterrormessage("Server Not response")
-      } else if (err.response?.status === 409) {
-        seterrormessage(err.response?.data.errormessage)
+      } else if (err.response?.status == 409) {
+        seterrormessage(err.response?.data.message)
       }
-    }
+    })
+
   }
 
 
@@ -158,15 +156,11 @@ function Buyassest() {
         </form>
       </header>
 
-      {error ? <h1 className='bg-red-300 text-xl '>{errormessage}  </h1> : ""}
+      {error ? <h1 className='bg-red-300 text-xl py-2 px-3 '>{errormessage}  </h1> : ""}
       {success ? <h1 className='bg-green-300 text-xl p-3'> Your Product Sale </h1> : ""}
       {/* Bottom part */}
       <ul className="bg-slate-100 p-4 sm:px-8 sm:pt-6 sm:pb-8 lg:p-4 xl:px-8 xl:pt-6 xl:pb-8 flex flex-row  flex-wrap  justify-self-start  gap-4 text-sm leading-6">
-
         {component}
-
-
-
       </ul>
 
     </div>

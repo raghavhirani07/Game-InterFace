@@ -10,7 +10,6 @@ function AllGame() {
   const [ error, seterror ] = useState(false);
   const [ errormessage, seterrormessage ] = useState("")
   useEffect(() => {
-    try {
       const result = axios.post("/game/usergame",
         { email: email },
         {
@@ -22,18 +21,16 @@ function AllGame() {
         console.log(ids);
         setgamedetail(ids)
 
-      })
-      // console.log(gamedetail);
+      }).catch ((err) => {
 
-    }
-    catch (err) {
-      error(true)
-      if (!err?.response) {
-        seterrormessage("Server Not response")
-      } else if (err.response?.status === 409) {
-        seterrormessage(err.response?.data.errormessage)
-      }
-    }
+        error(true)
+        if (!err?.response) {
+          seterrormessage("Server Not response")
+        } else if (err.response?.status === 409) {
+          seterrormessage(err.response?.data.errormessage)
+        }
+      })
+
   }, [])
 
   const component = gamedetail.map((res, i) => {
@@ -68,7 +65,6 @@ function AllGame() {
             </div>
           </div>
         </div>
-
       </li>
     )
   })

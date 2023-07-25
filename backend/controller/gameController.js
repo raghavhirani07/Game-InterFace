@@ -45,7 +45,7 @@ export const getusergame = async (req, res) => {
         return res.send(usergame)
     }
     catch (err) {
-        return res.status(409).json({"Message":"User not Found "})
+        return res.status(409).json({ "Message": "User not Found " })
     }
 }
 export const fetchgamedetail = async (req, res) => {
@@ -88,7 +88,7 @@ export const getuserassest = async (req, res) => {
 
     console.log(allassest);
     if (allassest.length === 0) {
-        return res.status(409).json({ "message": "User Has no Assest" })
+        return res.status(403).json({ "message": "User Has no Assest" })
     }
 
     return res.send(allassest)
@@ -171,7 +171,7 @@ export const buyproduct = async (req, res) => {
     const buyer_user = await User.find({ email: email }).exec()
 
     const buyer_user_id = buyer_user[ 0 ][ "_id" ]
-    console.log(buyer_user_id);
+    // console.log(buyer_user_id);
     if (buyer_user.length == 0) {
         return res.status(409).json({ "message": "User Not have" })
     }
@@ -185,8 +185,15 @@ export const buyproduct = async (req, res) => {
     const game_id = sale_has_id[ 0 ][ "game_id" ];
     const assest_id = sale_has_id[ 0 ][ "assest_id" ]
     const saler_id = sale_has_id[ 0 ][ 'user_id' ]
-    console.log(assest_id);
+    // console.log(assest_id);
+    // console.log(buyer_user_id.toHexString())
+    // console.log(saler_id.toHexString());
+    // console.log(saler_id.toHexString() ==(buyer_user_id.toHexString()));
 
+    if (saler_id.toHexString() == (buyer_user_id.toHexString())) {
+        // console.log("in the same id ");
+        return res.status(409).json({ "message": "You not Buy Your Assest" })
+    }
 
     //* Find the Buyer has that game or not
     const has_game = await User.aggregate([ { '$match': { 'have_game.game_id': game_id, '_id': buyer_user_id } } ])

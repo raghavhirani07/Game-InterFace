@@ -10,7 +10,7 @@ function Yourassest() {
   const email = auth.email
 
   useEffect(() => {
-    try {
+    // try {
       axios.post("/game/getuserassest",
         { email: email },
         {
@@ -18,16 +18,21 @@ function Yourassest() {
         }
       ).then((response) => {
         const ids = response.data
-        // console.log(ids);
         setuserassest(ids)
+      }).catch((error) => {
+        console.log(error?.response);
+        setsucess(false)
       })
-    } catch (error) {
-      console.log(error?.response);
-    }
+
+
+    // }
+    //  catch (error) {
+    //   console.log(error?.response);
+    //   setsucess(false)
+    // }
   }, [email])
 
   const saleproduct = (email, game_id, assest_id) => {
-    try {
       axios.post("/game/saleproduct",
         { email, game_id, assest_id },
         {
@@ -35,23 +40,22 @@ function Yourassest() {
         }
       ).then((res) => {
         console.log(res);
+        setsucess(true)
+      }).catch((error) => {
+        console.log(error?.response);
+        setsucess(false)
       })
-      setsucess(true)
-    } catch (error) {
-      console.log(error?.response);
-      setsucess(false)
     }
-  }
 
 
 
 
-  const component = userassest.map((res) => {
+
+  const component = userassest?.map((res) => {
     // console.log(res.game_id.game_name)
     return (
       <div>
         <center><h1 className="text-3xl font-bold pl-5 mt-5  bg-blue-300 py-2 border-r-2 border"> {res.game_id.game_name}</h1></center>
-
         <ul className="bg-slate-100 p-4 sm:px-8 sm:pt-6 sm:pb-8 lg:p-4 xl:px-8 xl:pt-6 xl:pb-8 flex flex-row  flex-wrap  justify-self-start  gap-4 text-sm leading-6">
           {
             res.user_assest.assest_id.map((result, i) => {
@@ -98,7 +102,6 @@ function Yourassest() {
                     </div>
                   </div>
                 </li>
-
               )
             })}
         </ul>
